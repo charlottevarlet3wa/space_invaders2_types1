@@ -69,7 +69,7 @@ class Spaceship {
         this.width = 30;
         this.height = 30;
         this.speed = 1.5;
-        this.health = 50;
+        this.health = 10;
         this.moveLeft = false;
         this.moveRight = false;
         this.moveUp = false;
@@ -103,6 +103,7 @@ class Enemy {
         this.height = height;
         this.speed = speed;
         this.color = color;
+        this.shape = Math.floor(Math.random() * 4);
         this.movementBehavior = movementBehavior;
         this.game = game;
         this.markedForDeletion = false;
@@ -125,9 +126,78 @@ class Enemy {
 
     draw(ctx) {
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
+        let radius = this.width *1.5; // Rayon pour les coins arrondis, ajustable
+        let newWidth = this.width;
+        let newHeight = this.height;
+        switch(this.shape) {
+    
+            case 0:
+                newWidth = this.width;
+                newHeight = this.height;
+                radius = this.width ; // Rayon pour les coins arrondis, ajustable
+                ctx.beginPath();
+                    ctx.moveTo(this.x + newWidth / 2, this.y + radius);
+                    ctx.lineTo(this.x + newWidth - radius, this.y + newHeight / 2 - radius);
+                    ctx.quadraticCurveTo(this.x + newWidth, this.y + newHeight / 2, this.x + newWidth - radius, this.y + newHeight / 2 + radius);
+                    ctx.lineTo(this.x + newWidth / 2, this.y + newHeight - radius);
+                    ctx.lineTo(this.x + radius, this.y + newHeight / 2 + radius);
+                    ctx.quadraticCurveTo(this.x, this.y + newHeight / 2, this.x + radius, this.y + newHeight / 2 - radius);
+                    ctx.lineTo(this.x + newWidth / 2, this.y + radius);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
 
+                
+            case 1:  // Weird square 2
+                radius = this.width * 2;
+                ctx.beginPath();
+                ctx.moveTo(this.x + radius, this.y);
+                ctx.lineTo(this.x + this.width - radius, this.y);
+                ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + radius);
+                ctx.lineTo(this.x + this.width, this.y + this.height - radius);
+                ctx.quadraticCurveTo(this.x + this.width, this.y + this.height, this.x + this.width - radius, this.y + this.height);
+                ctx.lineTo(this.x + radius, this.y + this.height);
+                ctx.quadraticCurveTo(this.x, this.y + this.height, this.x, this.y + this.height - radius);
+                ctx.lineTo(this.x, this.y + radius);
+                ctx.quadraticCurveTo(this.x, this.y, this.x + radius, this.y);
+                ctx.closePath();
+                ctx.fill();
+            break;
+            
+            case 2:  // Weird square
+                radius = this.width *1.5; // Rayon pour les coins arrondis, ajustable
+
+                ctx.beginPath();
+                ctx.moveTo(this.x + this.width / 2, this.y + this.height - radius);
+                ctx.lineTo(this.x + radius, this.y + radius);
+                ctx.quadraticCurveTo(this.x, this.y, this.x + radius, this.y);
+                ctx.lineTo(this.x + this.width - radius, this.y);
+                ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width - radius, this.y + radius);
+                ctx.lineTo(this.x + this.width / 2, this.y + this.height - radius);
+                ctx.closePath();
+                ctx.fill();
+                break;
+    
+            case 3:  // Losange bizarre
+                newWidth = this.width / 2;
+                newHeight = this.height / 2;
+                radius = newWidth *1.5; // Rayon pour les coins arrondis, ajustable
+                ctx.beginPath();
+                    ctx.moveTo(this.x + newWidth / 2, this.y + radius);
+                    ctx.lineTo(this.x + newWidth - radius, this.y + newHeight / 2 - radius);
+                    ctx.quadraticCurveTo(this.x + newWidth, this.y + newHeight / 2, this.x + newWidth - radius, this.y + newHeight / 2 + radius);
+                    ctx.lineTo(this.x + newWidth / 2, this.y + newHeight - radius);
+                    ctx.lineTo(this.x + radius, this.y + newHeight / 2 + radius);
+                    ctx.quadraticCurveTo(this.x, this.y + newHeight / 2, this.x + radius, this.y + newHeight / 2 - radius);
+                    ctx.lineTo(this.x + newWidth / 2, this.y + radius);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+            
+        }
+    }
+    
+    
     startFiring() {
         this.fireIntervalId = setInterval(() => {
             if (!this.markedForDeletion) {
@@ -211,7 +281,8 @@ function toRightDiagonalMovement(enemy, canvas) {
 
 const movements = [horizontalMovement, verticalMovement, diagonalMovement, toRightDiagonalMovement, upMovement];
 function spawnCustomWave(game) {
-    const colors = ['yellow', 'green', 'blue', 'red'].sort((a, b) => 0.5 - Math.random());;
+    // const colors = ['yellow', 'green', 'blue', 'red'].sort((a, b) => 0.5 - Math.random());;
+    const colors = ['gold', 'rgb(168, 242, 19)', 'rgb(0, 187, 255)', 'rgb(255, 0, 89)'].sort((a, b) => 0.5 - Math.random());;
     const movementBehavior = movements[Math.floor(Math.random() * movements.length)]; // Tous les mouvements sont horizontaux ici
     // const movementBehavior = verticalMovement; // Tous les mouvements sont horizontaux ici
     // const movementBehavior = diagonalMovement; // Tous les mouvements sont horizontaux ici
@@ -329,10 +400,8 @@ class Game {
 
     handleVisibilityChange() {
         if (document.hidden) {
-            console.log('hidden')
             this.pauseGame();  // Mettre le jeu en pause
         } else {
-            console.log('not hidden')
             this.resumeGame();  // Reprendre le jeu
         }
     }
@@ -364,25 +433,77 @@ class Game {
         this.showStartScreen();
     }
 
+    // showStartScreen() {
+    //     const startScreen = document.getElementById('startScreen');
+    //     startScreen.style.display = 'block';
+
+    //     const startGame = () => {
+    //         startScreen.style.display = 'none';
+    //         gameOverScreen.style.display = 'none';
+    //         this.gameStarted = true;
+    //         this.spaceship.health = 1;
+    //         this.spawnEnemyWave();
+    //         this.startSpawnChecker();  // Commence à vérifier le nombre d'ennemis
+    //         this.gameLoop();
+    //     };
+    //     const restartGame = () => {
+    //         startScreen.style.display = 'none';
+    //         gameOverScreen.style.display = 'none';
+    //         this.spaceship.health = 1;
+    //         this.resumeGame();
+    //         // this.gameLoop();
+    //     };
+
+    //     document.addEventListener('keydown', (e) => {
+    //         if (e.code === 'Enter') {
+    //             if(!this.gameStarted){
+    //                 startGame();
+    //             }
+    //             else if(this.gamePaused){
+    //                 restartGame();
+    //             }
+    //         }
+    //     });
+    // }
+
     showStartScreen() {
         const startScreen = document.getElementById('startScreen');
         startScreen.style.display = 'block';
-
+    
         const startGame = () => {
             startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
             this.gameStarted = true;
+            this.paused = false;  // Assurez-vous que le jeu n'est pas en pause
+            this.spaceship.health = 100;  // Remet la santé à 100
+            this.score = 0;  // Remet le score à zéro
+            this.enemies = [];  // Vide la liste des ennemis
+            this.playerBullets = [];  // Vide la liste des balles du joueur
+            this.bullets = [];  // Vide la liste des balles ennemies
             this.spawnEnemyWave();
-            this.startSpawnChecker();  // Commence à vérifier le nombre d'ennemis
-            this.gameLoop();
+            this.startSpawnChecker();
+            this.gameLoop();  // Démarrer la boucle de jeu
         };
-
+    
+        const restartGame = () => {
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            this.paused = false;
+            this.spaceship.health = 100;  // Remet la santé à 100
+            this.score = 0; 
+        };
+    
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Enter' && !this.gameStarted) {
-                startGame();
+            if (e.code === 'Enter') {
+                if (!this.gameStarted) {
+                    startGame();
+                } else if (this.paused) {
+                    restartGame();
+                }
             }
         });
     }
-
+    
     
 
     async loadQuestions() {
@@ -401,7 +522,7 @@ class Game {
             valeur = `"${valeur}"`;
         }
     
-        const questionText = `${questionData.variable} <- ${valeur}`;
+        const questionText = `${questionData.variable} ← ${valeur}`;
         document.getElementById('question-display').innerText = questionText;
     }
 
@@ -425,8 +546,21 @@ class Game {
         }
     }
 
-    gameLoop() {
+    // gameLoop() {
 
+    //     if (!this.paused) {
+    //         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //         this.spaceship.draw(this.ctx);
+    //         this.updateEntities();
+    //         this.drawEntities();
+    //         this.drawHealthBar();
+    //         this.drawScore();
+    //         if (this.gameStarted) {
+    //             requestAnimationFrame(() => this.gameLoop());
+    //         }
+    //     }
+    // }
+    gameLoop() {
         if (!this.paused) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.spaceship.draw(this.ctx);
@@ -434,11 +568,10 @@ class Game {
             this.drawEntities();
             this.drawHealthBar();
             this.drawScore();
-            if (this.gameStarted) {
-                requestAnimationFrame(() => this.gameLoop());
-            }
         }
+        requestAnimationFrame(() => this.gameLoop());  // Toujours maintenir la boucle de jeu active
     }
+    
 
     updateEntities() {
         this.spaceship.updatePosition(this.canvas.width, this.canvas.height);
@@ -490,10 +623,10 @@ class Game {
                     this.enemies.splice(enemyIndex, 1);
 
                     // Mise à jour de la question après avoir tiré sur un ennemi
-                    if ((currentQuestion.type === 'int' && enemy.color === 'red') ||
-                        (currentQuestion.type === 'string' && enemy.color === 'green') ||
-                        (currentQuestion.type === 'float' && enemy.color === 'blue') ||
-                        (currentQuestion.type === 'bool' && enemy.color === 'yellow')) {
+                    if ((currentQuestion.type === 'int' && enemy.color === 'rgb(255, 0, 89)') || // red
+                        (currentQuestion.type === 'string' && enemy.color === 'rgb(168, 242, 19)') || // green
+                        (currentQuestion.type === 'float' && enemy.color === 'rgb(0, 187, 255)') || // blue
+                        (currentQuestion.type === 'bool' && enemy.color === 'gold')) {
                         this.displayQuestion();
                         this.score += 1;
                     }
@@ -511,16 +644,16 @@ class Game {
             ) {
                 this.bullets.splice(index, 1);
 
-                let bulletEffect = -2; // Effet par défaut : la balle diminue la vie
+                let bulletEffect = -10; // Effet par défaut : la balle diminue la vie
 
-                if ((currentQuestion.type === 'int' && bullet.color === 'red') ||
-                    (currentQuestion.type === 'string' && bullet.color === 'green') ||
-                    (currentQuestion.type === 'float' && bullet.color === 'blue') ||
-                    (currentQuestion.type === 'bool' && bullet.color === 'yellow')) {
-                    bulletEffect = 2; // Effet positif : la balle augmente la vie
+                if ((currentQuestion.type === 'int' && bullet.color === 'rgb(255, 0, 89)') || // red
+                    (currentQuestion.type === 'string' && bullet.color === 'rgb(168, 242, 19)') || // green
+                    (currentQuestion.type === 'float' && bullet.color === 'rgb(0, 187, 255)') || // blue
+                    (currentQuestion.type === 'bool' && bullet.color === 'gold')) { // yellow
+                    bulletEffect = 10; // Effet positif : la balle augmente la vie
                 }
-
                 this.spaceship.health += bulletEffect;
+
 
                 // S'assurer que la vie ne dépasse pas 100 ou ne tombe pas en dessous de 0
                 this.spaceship.health = Math.max(0, Math.min(100, this.spaceship.health));
@@ -532,15 +665,27 @@ class Game {
         });
     }
 
+    // endGame() {
+    //     // this.gameStarted = false;
+    //     this.pauseGame();
+    //     // this.gamePaused = true;
+    //     // this.stopSpawnChecker();  // Arrête le spawn checker lorsque le jeu se termine
+    //     const gameOverScreen = document.getElementById('gameOverScreen');
+    //     const finalScore = document.getElementById('finalScore');
+        
+    //     finalScore.innerText = this.score;
+    //     gameOverScreen.style.display = 'block';
+    // }
+
     endGame() {
-        this.gameStarted = false;
-        this.stopSpawnChecker();  // Arrête le spawn checker lorsque le jeu se termine
+        this.paused = true;  // Mettez simplement le jeu en pause
         const gameOverScreen = document.getElementById('gameOverScreen');
         const finalScore = document.getElementById('finalScore');
         
         finalScore.innerText = this.score;
         gameOverScreen.style.display = 'block';
     }
+    
 
     attachEventListeners() {
         document.addEventListener('keydown', (event) => {
