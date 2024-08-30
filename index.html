@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduShooter Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div class="color-container">
+            <p style="color:red">int</p>
+            <p style="color:blue">float</p>
+            <p style="color:green">string</p>
+            <p style="color:yellow">bool</p>
+        </div>
+        <div id="startScreen" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background-color:black; color:white; padding:20px; text-align:center;">
+            Press Enter to start
+        </div>        
+        <div id="gameOverScreen" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background-color:black; color:white; padding:20px; text-align:center;">
+            Game Over<br>Score: <span id="finalScore"></span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="question-display">Question will appear here</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
