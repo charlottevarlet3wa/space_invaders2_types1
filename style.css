@@ -37,16 +37,17 @@ body, html {
 
 }
 .color-container p:nth-of-type(2){
-  color: blue;
+  /* color: blue; */
   color: rgb(0, 187, 255);
 }
 .color-container p:nth-of-type(3){
-  color: green;
+  /* color: green; */
   color: rgb(168, 242, 19);
 
 }
 .color-container p:nth-of-type(4){
-  color: gold;
+  /* color: gold; */
+  color: rgb(255, 136, 0)
 }
 
 #gameCanvas {

@@ -282,7 +282,7 @@ function toRightDiagonalMovement(enemy, canvas) {
 const movements = [horizontalMovement, verticalMovement, diagonalMovement, toRightDiagonalMovement, upMovement];
 function spawnCustomWave(game) {
     // const colors = ['yellow', 'green', 'blue', 'red'].sort((a, b) => 0.5 - Math.random());;
-    const colors = ['gold', 'rgb(168, 242, 19)', 'rgb(0, 187, 255)', 'rgb(255, 0, 89)'].sort((a, b) => 0.5 - Math.random());;
+    const colors = [' rgb(255, 136, 0)', 'rgb(168, 242, 19)', 'rgb(0, 187, 255)', 'rgb(255, 0, 89)'].sort((a, b) => 0.5 - Math.random());;
     const movementBehavior = movements[Math.floor(Math.random() * movements.length)]; // Tous les mouvements sont horizontaux ici
     // const movementBehavior = verticalMovement; // Tous les mouvements sont horizontaux ici
     // const movementBehavior = diagonalMovement; // Tous les mouvements sont horizontaux ici
@@ -353,7 +353,7 @@ function spawnCustomWave(game) {
 }
 
 class Projectile {
-    constructor(x, y, speedX, speedY, color = 'white', width = 5, height = 10) {
+    constructor(x, y, speedX, speedY, color = 'white', width = 7, height = 15) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -626,7 +626,7 @@ class Game {
                     if ((currentQuestion.type === 'int' && enemy.color === 'rgb(255, 0, 89)') || // red
                         (currentQuestion.type === 'string' && enemy.color === 'rgb(168, 242, 19)') || // green
                         (currentQuestion.type === 'float' && enemy.color === 'rgb(0, 187, 255)') || // blue
-                        (currentQuestion.type === 'bool' && enemy.color === 'gold')) {
+                        (currentQuestion.type === 'bool' && enemy.color === ' rgb(255, 136, 0)')) {
                         this.displayQuestion();
                         this.score += 1;
                     }
@@ -649,7 +649,7 @@ class Game {
                 if ((currentQuestion.type === 'int' && bullet.color === 'rgb(255, 0, 89)') || // red
                     (currentQuestion.type === 'string' && bullet.color === 'rgb(168, 242, 19)') || // green
                     (currentQuestion.type === 'float' && bullet.color === 'rgb(0, 187, 255)') || // blue
-                    (currentQuestion.type === 'bool' && bullet.color === 'gold')) { // yellow
+                    (currentQuestion.type === 'bool' && bullet.color === ' rgb(255, 136, 0)')) { // yellow
                     bulletEffect = 10; // Effet positif : la balle augmente la vie
                 }
                 this.spaceship.health += bulletEffect;
