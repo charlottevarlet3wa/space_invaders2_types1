@@ -68,7 +68,7 @@ class Spaceship {
         this.y = y;
         this.width = 30;
         this.height = 30;
-        this.speed = 1.5;
+        this.speed = 3;
         this.health = 10;
         this.moveLeft = false;
         this.moveRight = false;
@@ -528,7 +528,7 @@ class Game {
 
     startSpawnChecker() {
         this.spawnInterval = setInterval(() => {
-            if (this.enemies.length < 4) {
+            if (this.enemies.length < 9) {
                 this.spawnEnemyWave();
             }
         }, 2000);
@@ -644,7 +644,7 @@ class Game {
             ) {
                 this.bullets.splice(index, 1);
 
-                let bulletEffect = -10; // Effet par défaut : la balle diminue la vie
+                let bulletEffect = -30; // Effet par défaut : la balle diminue la vie
 
                 if ((currentQuestion.type === 'int' && bullet.color === 'rgb(255, 0, 89)') || // red
                     (currentQuestion.type === 'string' && bullet.color === 'rgb(168, 242, 19)') || // green
